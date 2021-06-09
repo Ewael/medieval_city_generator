@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from shapely.geometry import mapping
 import fiona
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from enum import IntEnum
 from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
 from shapely import ops
