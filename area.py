@@ -88,7 +88,8 @@ class Area():
         Tests:
             >>> surf = Area(Polygon([(0,0), (20,0), (20,40), (0,40)]), Category.HOUSE)
             >>> surf.split(0.5, 0, False)  # house takes 1/2 of surface and is north
-            (Category.HOUSE:POLYGON ((20 20, 20 0, 0 0, 0 20, 20 20)), Category.GARDEN:POLYGON ((0 20, 0 40, 20 40, 20 20, 0 20)))
+            (Category.HOUSE:POLYGON ((20 20, 20 0, 0 0, 0 20, 20 20)),
+            Category.GARDEN:POLYGON ((0 20, 0 40, 20 40, 20 20, 0 20)))
         """
         direction = np.deg2rad(90 - direction)  # degrees are cw while radian are ccw + 0 is North
         pts = np.array(self._polygon.minimum_rotated_rectangle.exterior.coords)
@@ -141,4 +142,4 @@ class Area():
 if __name__ == "__main__":
     zone = Area(Polygon([(0,0), (10,0), (15,15), (-5,10)]), Category.HOUSE) # units are meters
     zone.split(0.4, 180, inplace=True)  # house in south, it takes 40 % of the area
-    tools.json(zone, '/tmp/house.json')
+    tools.json(zone, 'outfiles/house.json')
