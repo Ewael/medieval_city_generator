@@ -169,26 +169,31 @@ class Area():
         else:
             return [self,]
 
+def generate_perimeter(radius, dimensions = (8, 2)):
+    return Polygon((2 * np.random.random(dimensions) - 1) * radius).convex_hull.buffer(radius / 2)
 
 if __name__ == "__main__":
-    limit = Polygon([(-20,-20), (-20,20), (20,20), (20,-20)])
-
-    N = 5
+    N = 14
     radius = (N-2)
+
+    limit = generate_perimeter(radius)
+
     points = np.array([[x,y] for x in np.linspace(-1,1,N) for y in np.linspace(-1,1,N)])
     points *= radius
     points += np.random.random((len(points), 2)) * (radius / 3)
+
+    # build initial regions from generated points
     vor = Voronoi(points)
     regions = [r for r in vor.regions if -1 not in r and len(r) > 0]
     regions = [Polygon([vor.vertices[i] for i in r]) for r in regions]
     regions = [r for r in regions if limit.contains(r)]
 
+    walls = generate_perimeter(radius / 1.75)
+    categories = [Category.HOUSE if walls.contains(r) else Category.FARM for r in regions]
     zone = Area(limit, Category.COMPOSITE)
+
     for i in range(len(regions)):
-        if i % 2 == 1: # odd
-            area = Area(regions[i], Category.LAND)
-        else:
-            area = Area(regions[i], Category.HOUSE)
+        area = Area(regions[i], categories[i])
         zone.add_subco(area)
 
     """
