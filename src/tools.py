@@ -3,14 +3,20 @@
 from shapely.geometry import mapping
 import fiona
 
+def write_co(c, what):
+    if len(what.components()) == 1: # if only subco is the co itself
+        return
+    for co in what.components(): # else rec call on each subco
+        c.write({
+            'geometry': mapping(co._polygon),
+            'properties': {'category': co._category.value},
+        })
+        write_co(c, co)
+
 def json(what, filename):
     schema = {
         'geometry': 'Polygon',
         'properties': {'category': 'int'},
     }
     with fiona.open(filename, 'w', 'GeoJSON', schema) as c:
-        for co in what.components():
-            c.write({
-                'geometry': mapping(co._polygon),
-                'properties': {'category': co._category.value},
-            })
+        write_co(c, what)

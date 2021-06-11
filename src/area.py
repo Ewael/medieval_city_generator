@@ -8,6 +8,13 @@ import tools
 import sys
 
 
+class Dir(IntEnum):
+    NORTH = 0
+    EAST = 90
+    SOUTH = 180
+    WEST = 270
+
+
 class Category(IntEnum):
     UNDEFINED = 0
     LAND = 1
@@ -80,7 +87,7 @@ class Area():
         Split an area in two areas. Store result in self.sub_areas if inplace == True.
 
         Args:
-            percentage: float - percentage of surface for first area, between 0 and 1
+            percentage: float - percentage of surface for new area, between 0 and 1
             direction: int - side for first area (from center to 0 = North, 90 = East...)
             new_category: Category - category of the second area
 
@@ -95,7 +102,9 @@ class Area():
             >>> res0.symmetric_difference(res[0].polygon).area < 1
             True
         """
-        assert(percentage > 0)
+        assert(percentage > 0 and percentage < 1)
+        percentage = 1 - percentage
+        direction = direction - 180
         if not self._polygon.exterior.is_ccw: # should be counter clockwise
             coords = list(self._polygon.exterior.coords)
             self._polygon = Polygon(coords[::-1])
@@ -142,8 +151,7 @@ class Area():
         area1 = Area(res[1], new_category)
         if inplace:
             self._sub_areas = [area0, area1]
-        else:
-            return area0, area1
+        return area0, area1
 
     def components(self):
         if len(self._sub_areas) > 0:
@@ -153,8 +161,12 @@ class Area():
 
 
 if __name__ == "__main__":
-    zone = Area(Polygon([(0,0), (10,0), (15,15), (-5,10)]), Category.STREET) # units are meters
-    zone.split(0.4, 280, inplace=True)  # house in south, it takes 40 % of the area
+    zone = Area(Polygon([(0,0), (40,0), (40,40), (0,40)]), Category.HOUSE)
+
+    h1, h2 = zone.split(0.6, Dir.EAST, new_category=Category.HOUSE)
+    h2, s1 = h2.split(0.2, Dir.WEST, new_category=Category.STREET)
+    h1, g1 = h1.split(0.3, Dir.NORTH, new_category=Category.GARDEN)
+
     if len(sys.argv) > 1:
         outfile = sys.argv[1] + ".json"
     else:
