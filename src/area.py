@@ -153,10 +153,10 @@ class Area():
 
 
 if __name__ == "__main__":
-    zone = Area(Polygon([(0,0), (10,0), (15,15), (-5,10)]), Category.HOUSE) # units are meters
+    zone = Area(Polygon([(0,0), (10,0), (15,15), (-5,10)]), Category.STREET) # units are meters
     zone.split(0.4, 280, inplace=True)  # house in south, it takes 40 % of the area
     if len(sys.argv) > 1:
         outfile = sys.argv[1] + ".json"
     else:
         outfile = "house.json"
-    tools.json(zone, "outfiles/" + outfile)
+    tools.json(zone, "../outfiles/" + outfile)

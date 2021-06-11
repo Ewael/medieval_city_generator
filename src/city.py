@@ -17,4 +17,4 @@ class City:
 
 if __name__ == "__main__":
     city = City(5000)
-    tools.json(city, 'outfiles/city.json')
+    tools.json(city, '../outfiles/city.json')

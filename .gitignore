@@ -1,3 +1,4 @@
 outfiles/
 .idea/
 __pycache__/
+*.swp
