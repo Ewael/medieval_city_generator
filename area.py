@@ -5,6 +5,7 @@ import shapely
 import numpy as np
 
 import tools
+import sys
 
 
 class Category(IntEnum):
@@ -154,4 +155,8 @@ class Area():
 if __name__ == "__main__":
     zone = Area(Polygon([(0,0), (10,0), (15,15), (-5,10)]), Category.HOUSE) # units are meters
     zone.split(0.4, 280, inplace=True)  # house in south, it takes 40 % of the area
-    tools.json(zone, '/tmp/house.json')
+    if len(sys.argv) > 1:
+        outfile = sys.argv[1] + ".json"
+    else:
+        outfile = "house.json"
+    tools.json(zone, "outfiles/" + outfile)

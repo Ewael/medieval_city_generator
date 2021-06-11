@@ -6,7 +6,7 @@ import sys
 try:
     filename = sys.argv[1]
 except:
-    filename = '/tmp/house.json'
+    filename = 'outfiles/house.json'
 
 colors_dic = {1:[0.9,0.9,0.2, 1],
               2:[1, 1, 0.5, 1],
