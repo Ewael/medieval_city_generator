@@ -4,7 +4,7 @@ from shapely.geometry import mapping
 import fiona
 
 def write_co(c, what):
-    if len(what.components()) == 1: # if only subco is the co itself
+    if what.components() == [what]: # if only subco is the co itself
         return
     for co in what.components(): # else rec call on each subco
         c.write({

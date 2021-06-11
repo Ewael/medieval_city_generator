@@ -1,11 +1,15 @@
+#!/usr/bin/env python3
+
 from enum import IntEnum
 from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
 from shapely import ops
 import shapely
 import numpy as np
+from scipy.spatial import Voronoi, voronoi_plot_2d
+import sys
+import numpy as np
 
 import tools
-import sys
 
 
 class Dir(IntEnum):
@@ -64,7 +68,7 @@ class Area():
         """
         self._polygon = polygon
         self._category = category
-        self._sub_areas = sub_areas
+        self._sub_areas = [self] + sub_areas
         self._id = self.get_id()
         Area.members.append(self)
 
@@ -153,6 +157,12 @@ class Area():
             self._sub_areas = [area0, area1]
         return area0, area1
 
+    def add_subco(self, subco):
+        if self._sub_areas == [self]:
+            self._sub_areas = [subco]
+        else:
+            self._sub_areas.append(subco)
+
     def components(self):
         if len(self._sub_areas) > 0:
             return self._sub_areas
@@ -161,11 +171,32 @@ class Area():
 
 
 if __name__ == "__main__":
-    zone = Area(Polygon([(0,0), (40,0), (40,40), (0,40)]), Category.HOUSE)
+    limit = Polygon([(-20,-20), (-20,20), (20,20), (20,-20)])
 
-    h1, h2 = zone.split(0.6, Dir.EAST, new_category=Category.HOUSE)
+    N = 5
+    radius = (N-2)
+    points = np.array([[x,y] for x in np.linspace(-1,1,N) for y in np.linspace(-1,1,N)])
+    points *= radius
+    points += np.random.random((len(points), 2)) * (radius / 3)
+    vor = Voronoi(points)
+    regions = [r for r in vor.regions if -1 not in r and len(r) > 0]
+    regions = [Polygon([vor.vertices[i] for i in r]) for r in regions]
+    regions = [r for r in regions if limit.contains(r)]
+
+    zone = Area(limit, Category.COMPOSITE)
+    for i in range(len(regions)):
+        if i % 2 == 1: # odd
+            area = Area(regions[i], Category.LAND)
+        else:
+            area = Area(regions[i], Category.HOUSE)
+        zone.add_subco(area)
+
+    """
+    residential_zone = Area(Polygon([(0,0), (-40,0), (-40,-40), (0,-40)]), Category.HOUSE)
+    h1, h2 = residential_zone.split(0.6, Dir.EAST, new_category=Category.HOUSE)
     h2, s1 = h2.split(0.2, Dir.WEST, new_category=Category.STREET)
     h1, g1 = h1.split(0.3, Dir.NORTH, new_category=Category.GARDEN)
+    """
 
     if len(sys.argv) > 1:
         outfile = sys.argv[1] + ".json"
