@@ -173,8 +173,8 @@ def generate_perimeter(radius, dimensions = (8, 2)):
     return Polygon((2 * np.random.random(dimensions) - 1) * radius).convex_hull.buffer(radius / 2)
 
 if __name__ == "__main__":
-    N = 14
-    radius = (N-2)
+    N = 8
+    radius = 8
 
     limit = generate_perimeter(radius)
 
@@ -188,7 +188,7 @@ if __name__ == "__main__":
     regions = [Polygon([vor.vertices[i] for i in r]) for r in regions]
     regions = [r for r in regions if limit.contains(r)]
 
-    walls = generate_perimeter(radius / 1.75)
+    walls = generate_perimeter(radius / 2)
     categories = [Category.HOUSE if walls.contains(r) else Category.FARM for r in regions]
     zone = Area(limit, Category.COMPOSITE)
 
@@ -208,3 +208,16 @@ if __name__ == "__main__":
     else:
         outfile = "house.json"
     tools.json(zone, "../outfiles/" + outfile)
+
+"""
+Une fois qu'on a split farm et city
+
+on associe chaque batiment unique à une case
+-> on s'occupe des presets uniques d'abord pour remplir la ville
+
+puis on colorie le reste en piochant de maniere random dans un liste de presets
+plus génériques
+
+adapte la taille du split en fonction de si on est dans la city ou en dehors
+-> on peut donner nous-meme la taille en parametre
+"""
