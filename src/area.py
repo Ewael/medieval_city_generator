@@ -196,13 +196,17 @@ if __name__ == "__main__":
         area = Area(regions[i], categories[i])
         zone.add_subco(area)
 
-    """
-    residential_zone = Area(Polygon([(0,0), (-40,0), (-40,-40), (0,-40)]), Category.HOUSE)
-    h1, h2 = residential_zone.split(0.6, Dir.EAST, new_category=Category.HOUSE)
-    h2, s1 = h2.split(0.2, Dir.WEST, new_category=Category.STREET)
-    h1, g1 = h1.split(0.3, Dir.NORTH, new_category=Category.GARDEN)
-    """
+    # spliting city and land
+    city, land = [], []
+    for area in zone.components():
+        if area._category == Category.HOUSE:
+            city.append(area)
+        else: # FARM
+            land.append(area)
+    nb_districts = len(city)
+    nb_lands = len(land)
 
+    # save map
     if len(sys.argv) > 1:
         outfile = sys.argv[1] + ".json"
     else:
@@ -210,14 +214,42 @@ if __name__ == "__main__":
     tools.json(zone, "../outfiles/" + outfile)
 
 """
-Une fois qu'on a split farm et city
+Buildings:
+    HOUSE = 10
+    MANSION = 11
+    MARKET = 12
+    TOWNHALL = 13
+    UNIVERSITY = 14
+    CHURCH = 20
+    CATHEDRAL = 21
+    MONASTRY = 22
+    FORT = 31
+    CASTLE = 32
+    CHATEAU = 33
+    STREET = 50
+    BRIDGE = 51
+Nature:
+    LAND = 1
+    FIELD = 2
+    FOREST = 3
+    RIVER = 4
+    LAKE = 5
+    SEA = 6
+    PARK = 7
+    GARDEN = 8
+    FARM = 15
 
+Une fois qu'on a split farm et city
 on associe chaque batiment unique à une case
 -> on s'occupe des presets uniques d'abord pour remplir la ville
-
 puis on colorie le reste en piochant de maniere random dans un liste de presets
 plus génériques
-
-adapte la taille du split en fonction de si on est dans la city ou en dehors
+adapter la taille du split en fonction de si on est dans la city ou en dehors
 -> on peut donner nous-meme la taille en parametre
+
+example for asset and split usage:
+    residential_zone = Area(Polygon([(0,0), (-40,0), (-40,-40), (0,-40)]), Category.HOUSE)
+    h1, h2 = residential_zone.split(0.6, Dir.EAST, new_category=Category.HOUSE)
+    h2, s1 = h2.split(0.2, Dir.WEST, new_category=Category.STREET)
+    h1, g1 = h1.split(0.3, Dir.NORTH, new_category=Category.GARDEN)
 """
