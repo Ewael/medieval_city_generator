@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 
-from enum import IntEnum
 from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
+from enum import IntEnum
 from shapely import ops
-import shapely
-import numpy as np
-from scipy.spatial import Voronoi, voronoi_plot_2d
-import sys
-import numpy as np
 
-import tools
+import numpy as np
+import sys
 
 
 class Dir(IntEnum):
@@ -47,7 +43,6 @@ class Category(IntEnum):
 
 
 class Area():
-
     _last_id = 0
     members = []
 
@@ -169,87 +164,9 @@ class Area():
         else:
             return [self,]
 
+
 def generate_perimeter(radius, dimensions = (8, 2)):
+    """
+    Return a Polygon whose dims respect the given radius.
+    """
     return Polygon((2 * np.random.random(dimensions) - 1) * radius).convex_hull.buffer(radius / 2)
-
-if __name__ == "__main__":
-    N = 8
-    radius = 8
-
-    limit = generate_perimeter(radius)
-
-    points = np.array([[x,y] for x in np.linspace(-1,1,N) for y in np.linspace(-1,1,N)])
-    points *= radius
-    points += np.random.random((len(points), 2)) * (radius / 3)
-
-    # build initial regions from generated points
-    vor = Voronoi(points)
-    regions = [r for r in vor.regions if -1 not in r and len(r) > 0]
-    regions = [Polygon([vor.vertices[i] for i in r]) for r in regions]
-    regions = [r for r in regions if limit.contains(r)]
-
-    walls = generate_perimeter(radius / 2)
-    categories = [Category.HOUSE if walls.contains(r) else Category.FARM for r in regions]
-    zone = Area(limit, Category.COMPOSITE)
-
-    for i in range(len(regions)):
-        area = Area(regions[i], categories[i])
-        zone.add_subco(area)
-
-    # spliting city and land
-    city, land = [], []
-    for area in zone.components():
-        if area._category == Category.HOUSE:
-            city.append(area)
-        else: # FARM
-            land.append(area)
-    nb_districts = len(city)
-    nb_lands = len(land)
-
-    # save map
-    if len(sys.argv) > 1:
-        outfile = sys.argv[1] + ".json"
-    else:
-        outfile = "house.json"
-    tools.json(zone, "../outfiles/" + outfile)
-
-"""
-Buildings:
-    HOUSE = 10
-    MANSION = 11
-    MARKET = 12
-    TOWNHALL = 13
-    UNIVERSITY = 14
-    CHURCH = 20
-    CATHEDRAL = 21
-    MONASTRY = 22
-    FORT = 31
-    CASTLE = 32
-    CHATEAU = 33
-    STREET = 50
-    BRIDGE = 51
-Nature:
-    LAND = 1
-    FIELD = 2
-    FOREST = 3
-    RIVER = 4
-    LAKE = 5
-    SEA = 6
-    PARK = 7
-    GARDEN = 8
-    FARM = 15
-
-Une fois qu'on a split farm et city
-on associe chaque batiment unique à une case
--> on s'occupe des presets uniques d'abord pour remplir la ville
-puis on colorie le reste en piochant de maniere random dans un liste de presets
-plus génériques
-adapter la taille du split en fonction de si on est dans la city ou en dehors
--> on peut donner nous-meme la taille en parametre
-
-example for asset and split usage:
-    residential_zone = Area(Polygon([(0,0), (-40,0), (-40,-40), (0,-40)]), Category.HOUSE)
-    h1, h2 = residential_zone.split(0.6, Dir.EAST, new_category=Category.HOUSE)
-    h2, s1 = h2.split(0.2, Dir.WEST, new_category=Category.STREET)
-    h1, g1 = h1.split(0.3, Dir.NORTH, new_category=Category.GARDEN)
-"""
