@@ -60,7 +60,7 @@ def split_city(city, N, radius, limit, min_surface):
 
 
 """
-Buildings:
+Inner:
     HOUSE = 10
     MANSION = 11
     MARKET = 12
@@ -74,14 +74,6 @@ Buildings:
     CHATEAU = 33
     STREET = 50
     BRIDGE = 51
-Nature:
-    LAND = 1
-    FIELD = 2
-    FOREST = 3
-    RIVER = 4
-    LAKE = 5
-    SEA = 6
     PARK = 7
     GARDEN = 8
-    FARM = 15
 """
