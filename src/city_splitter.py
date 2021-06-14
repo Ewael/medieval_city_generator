@@ -5,23 +5,44 @@ from scipy.spatial import Voronoi, voronoi_plot_2d
 
 import numpy as np
 import random
+import logging
 
 from area import Category, Area, generate_perimeter
 
+logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 
-def split_city(city, N, radius, limit):
+
+def generate_regions(N, radius, limit, min_surface):
+    """
+    Generate random regions, loop while one region has an area < min_surface.
+    """
+    while True:
+        points = np.array([[x,y] for x in np.linspace(-1,1,N) for y in np.linspace(-1,1,N)])
+        points *= radius
+        points += np.random.random((len(points), 2)) * (radius / 3)
+
+        # build initial regions from generated points
+        vor = Voronoi(points)
+        regions = [r for r in vor.regions if -1 not in r and len(r) > 0]
+        regions = [Polygon([vor.vertices[i] for i in r]) for r in regions]
+        regions = [r for r in regions if limit.contains(r)]
+
+        # check surfaces
+        isgood = True
+        for r in regions:
+            if r.area < min_surface:
+                logging.info(f"Regenerating, area is too small: {r.area}")
+                isgood = False
+                break
+        if isgood:
+            return regions
+
+
+def split_city(city, N, radius, limit, min_surface):
     """
     Split inner and outer regions of the city.
     """
-    points = np.array([[x,y] for x in np.linspace(-1,1,N) for y in np.linspace(-1,1,N)])
-    points *= radius
-    points += np.random.random((len(points), 2)) * (radius / 3)
-
-    # build initial regions from generated points
-    vor = Voronoi(points)
-    regions = [r for r in vor.regions if -1 not in r and len(r) > 0]
-    regions = [Polygon([vor.vertices[i] for i in r]) for r in regions]
-    regions = [r for r in regions if limit.contains(r)]
+    regions = generate_regions(N, radius, limit, min_surface)
 
     walls = generate_perimeter(radius / 1.9)
     categories = [Category.HOUSE if walls.contains(r) else Category.FARM for r in regions]
@@ -36,23 +57,6 @@ def split_city(city, N, radius, limit):
             outer_city.append(area)
 
     return inner_city, outer_city
-
-
-def generate_outer_category():
-    n = random.random()
-    if n < 0.4:
-        return Category.LAND
-    if n < 0.8:
-        return Category.FARM
-    if n < 0.9:
-        return Category.FOREST
-    else:
-        return Category.LAKE
-
-
-def map_outer_city(outer_city, nb_lands):
-    for outer_area in outer_city:
-        outer_area.category = generate_outer_category()
 
 
 """

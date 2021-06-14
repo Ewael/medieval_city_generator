@@ -172,6 +172,9 @@ class Area():
         else:
             return [self,]
 
+    def get_area(self):
+        return self.polygon.area
+
 
 def generate_perimeter(radius, dimensions = (8, 2)):
     """
