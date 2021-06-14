@@ -12,9 +12,9 @@ from area import Category, Area, generate_perimeter
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 
 
-def generate_regions(N, radius, limit, min_surface):
+def generate_regions(N, radius, limit, min_surface, nb_small):
     """
-    Generate random regions, loop while one region has an area < min_surface.
+    Generate random regions, loop while one region has nb_small areas < min_surface.
     """
     while True:
         points = np.array([[x,y] for x in np.linspace(-1,1,N) for y in np.linspace(-1,1,N)])
@@ -28,21 +28,22 @@ def generate_regions(N, radius, limit, min_surface):
         regions = [r for r in regions if limit.contains(r)]
 
         # check surfaces
-        isgood = True
+        n = 0
         for r in regions:
             if r.area < min_surface:
-                logging.info(f"Regenerating, area is too small: {r.area}")
-                isgood = False
-                break
-        if isgood:
+                n += 1
+                if n > nb_small:
+                    break
+        if n < nb_small:
             return regions
+        logging.info(f"Regeneration regions, too many small areas")
 
 
-def split_city(city, N, radius, limit, min_surface):
+def split_city(city, N, radius, limit, min_surface, nb_small):
     """
     Split inner and outer regions of the city.
     """
-    regions = generate_regions(N, radius, limit, min_surface)
+    regions = generate_regions(N, radius, limit, min_surface, nb_small)
 
     walls = generate_perimeter(radius / 1.9)
     categories = [Category.HOUSE if walls.contains(r) else Category.FARM for r in regions]
@@ -57,23 +58,3 @@ def split_city(city, N, radius, limit, min_surface):
             outer_city.append(area)
 
     return inner_city, outer_city
-
-
-"""
-Inner:
-    HOUSE = 10
-    MANSION = 11
-    MARKET = 12
-    TOWNHALL = 13
-    UNIVERSITY = 14
-    CHURCH = 20
-    CATHEDRAL = 21
-    MONASTRY = 22
-    FORT = 31
-    CASTLE = 32
-    CHATEAU = 33
-    STREET = 50
-    BRIDGE = 51
-    PARK = 7
-    GARDEN = 8
-"""

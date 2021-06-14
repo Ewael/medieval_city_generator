@@ -10,6 +10,7 @@ import logging
 from area import Area, Category, generate_perimeter
 from city_splitter import split_city
 from mapper_outer import map_outer_city
+from mapper_inner import map_inner_city
 from city_utils import get_surface
 
 import tools
@@ -19,7 +20,7 @@ logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 
 class City(Area):
     def __init__(self, population, density=10000, has_walls=False, has_castel=False, has_river=False):
-        N, radius = 10, 10 # TODO: scale it with density
+        N, radius = 8, 10 # TODO: scale it with density
         logging.info(f"Generating borders for N = {N} and radius = {radius}")
         borders = generate_perimeter(radius)
         super().__init__(borders, Category.COMPOSITE)
@@ -36,9 +37,9 @@ class City(Area):
 
 
 def generate_city(city, N, radius, borders):
-    min_surface = 2.5
+    min_surface, nb_small = 3, 8
     while True:
-        inner_city, outer_city = split_city(city, N, radius, borders, min_surface)
+        inner_city, outer_city = split_city(city, N, radius, borders, min_surface, nb_small)
         nb_districts, nb_lands = len(inner_city), len(outer_city)
         inner_surface, outer_surface = get_surface(inner_city), get_surface(outer_city)
 
@@ -52,18 +53,9 @@ def generate_city(city, N, radius, borders):
         - inner surface = {inner_surface}
         - outer surface = {outer_surface}""")
     map_outer_city(outer_city, nb_lands)
+    map_inner_city(inner_city, nb_districts)
 
 
 if __name__ == "__main__":
     city = City(5000)
     tools.json(city, '../outfiles/city.json')
-
-"""
-
-
-example for asset and split usage:
-    residential_city = Area(Polygon([(0,0), (-40,0), (-40,-40), (0,-40)]), Category.HOUSE)
-    h1, h2 = residential_city.split(0.6, Dir.EAST, new_category=Category.HOUSE)
-    h2, s1 = h2.split(0.2, Dir.WEST, new_category=Category.STREET)
-    h1, g1 = h1.split(0.3, Dir.NORTH, new_category=Category.GARDEN)
-"""
