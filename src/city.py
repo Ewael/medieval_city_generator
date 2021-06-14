@@ -7,6 +7,7 @@ import numpy as np
 import shapely
 
 from area import Area, Category, generate_perimeter
+from city_splitter import split_city
 
 import tools
 
@@ -14,8 +15,8 @@ import tools
 class City(Area):
     def __init__(self, population, density=10000, has_walls=False, has_castel=False, has_river=False):
         N, radius = 8, 8 # TODO: scale it with density
-        limit = generate_perimeter(radius)
-        super().__init__(limit, Category.COMPOSITE)
+        borders = generate_perimeter(radius)
+        super().__init__(borders, Category.COMPOSITE)
 
         self.population = population
         # 10 000 ha/km2 by default, between 2000 ha/km2 with the fields and 30000 ha/km2
@@ -25,36 +26,12 @@ class City(Area):
         self.has_river = has_river
         self.districts = []
 
-        generate_city(self, N, radius, limit)
+        generate_city(self, N, radius, borders)
 
 
-def generate_city(city: City, N, radius, limit: Polygon):
-    points = np.array([[x,y] for x in np.linspace(-1,1,N) for y in np.linspace(-1,1,N)])
-    points *= radius
-    points += np.random.random((len(points), 2)) * (radius / 3)
-
-    # build initial regions from generated points
-    vor = Voronoi(points)
-    regions = [r for r in vor.regions if -1 not in r and len(r) > 0]
-    regions = [Polygon([vor.vertices[i] for i in r]) for r in regions]
-    regions = [r for r in regions if limit.contains(r)]
-
-    walls = generate_perimeter(radius / 2)
-    categories = [Category.HOUSE if walls.contains(r) else Category.FARM for r in regions]
-
-    for i in range(len(regions)):
-        area = Area(regions[i], categories[i])
-        city.add_subco(area)
-
-    # spliting city and land
-    inner_city, land = [], []
-    for area in city.components():
-        if area._category == Category.HOUSE:
-            inner_city.append(area)
-        else: # FARM
-            land.append(area)
-    nb_districts = len(inner_city)
-    nb_lands = len(land)
+def generate_city(city, N, radius, borders):
+    inner_city, outer_city = split_city(city, N, radius, borders)
+    nb_districts, nb_lands = len(inner_city), len(outer_city)
 
 
 if __name__ == "__main__":

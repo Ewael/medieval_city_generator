@@ -74,6 +74,14 @@ class Area():
         return str(self._category) + ":" +  self._polygon.wkt
 
     @property
+    def category(self):
+        return self._category
+
+    @category.setter
+    def category(self, new_category):
+        self._category = new_category
+
+    @property
     def identity(self):
         return self._id
 
