@@ -7,14 +7,14 @@ import numpy as np
 import shapely
 
 from area import Area, Category, generate_perimeter
-from city_splitter import split_city
+from city_splitter import split_city, map_outer_city
 
 import tools
 
 
 class City(Area):
     def __init__(self, population, density=10000, has_walls=False, has_castel=False, has_river=False):
-        N, radius = 8, 8 # TODO: scale it with density
+        N, radius = 10, 10 # TODO: scale it with density
         borders = generate_perimeter(radius)
         super().__init__(borders, Category.COMPOSITE)
 
@@ -30,8 +30,13 @@ class City(Area):
 
 
 def generate_city(city, N, radius, borders):
-    inner_city, outer_city = split_city(city, N, radius, borders)
-    nb_districts, nb_lands = len(inner_city), len(outer_city)
+    while True:
+        inner_city, outer_city = split_city(city, N, radius, borders)
+        nb_districts, nb_lands = len(inner_city), len(outer_city)
+        if nb_districts > 5 and nb_lands > 8: #TODO: scale it with density
+            break
+
+    map_outer_city(outer_city, nb_lands)
 
 
 if __name__ == "__main__":
@@ -39,38 +44,7 @@ if __name__ == "__main__":
     tools.json(city, '../outfiles/city.json')
 
 """
-Buildings:
-    HOUSE = 10
-    MANSION = 11
-    MARKET = 12
-    TOWNHALL = 13
-    UNIVERSITY = 14
-    CHURCH = 20
-    CATHEDRAL = 21
-    MONASTRY = 22
-    FORT = 31
-    CASTLE = 32
-    CHATEAU = 33
-    STREET = 50
-    BRIDGE = 51
-Nature:
-    LAND = 1
-    FIELD = 2
-    FOREST = 3
-    RIVER = 4
-    LAKE = 5
-    SEA = 6
-    PARK = 7
-    GARDEN = 8
-    FARM = 15
 
-Une fois qu'on a split farm et city
-on associe chaque batiment unique à une case
--> on s'occupe des presets uniques d'abord pour remplir la ville
-puis on colorie le reste en piochant de maniere random dans un liste de presets
-plus génériques
-adapter la taille du split en fonction de si on est dans la city ou en dehors
--> on peut donner nous-meme la taille en parametre
 
 example for asset and split usage:
     residential_city = Area(Polygon([(0,0), (-40,0), (-40,-40), (0,-40)]), Category.HOUSE)
