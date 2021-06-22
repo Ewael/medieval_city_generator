@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 
 
 class City(Area):
-    def __init__(self, population, density=10000, has_walls=False, has_castel=False, has_river=False):
+    def __init__(self, population, density=10000, has_walls=False, has_castle=False, has_river=False):
         N, radius = 8, 10 # TODO: scale it with density
         logging.info(f"Generating borders for N = {N} and radius = {radius}")
         borders = generate_perimeter(radius)
@@ -29,7 +29,7 @@ class City(Area):
         # 10 000 ha/km2 by default, between 2000 ha/km2 with the fields and 30000 ha/km2
         self.density = density
         self.has_walls = has_walls
-        self.has_castel = has_castel
+        self.has_castle = has_castle
         self.has_river = has_river
         self.districts = []
 

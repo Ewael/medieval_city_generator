@@ -36,7 +36,6 @@ class Category(IntEnum):
     MONASTRY = 22
     FORT = 31
     CASTLE = 32
-    CHATEAU = 33
     STREET = 50
     BRIDGE = 51
     COMPOSITE = 90  # a union of Areas

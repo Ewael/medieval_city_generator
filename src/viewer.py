@@ -38,7 +38,6 @@ colors_dic = {1:[255, 255, 205, 1],         # light yellow
               22:[255, 102, 153, 1],        # faded pink
               31:[165, 165, 165, 1],        # light grey
               32:[94, 94, 94, 1],           # grey
-              33:[94, 94, 94, 1],           # grey
               50:[223, 223, 223, 1],        # very light grey
               51:[55, 71, 69, 1],           # dark grey
               90:[0, 0, 0]                  # composite
