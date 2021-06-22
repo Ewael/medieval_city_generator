@@ -28,7 +28,7 @@ def get_unique_assets():
 def get_random_asset():
     assets = [
             [(Category.MANSION, 0.7), (Category.GARDEN, 0.3)],
-            #[(Category.HOUSE, 0.3), (Category.HOUSE, 0.3), (Category.HOUSE, 0.4)]
+            [(Category.HOUSE, 0.7), (Category.HOUSE, 0.5), (Category.HOUSE, 0.5)]
             ]
     return random.choice(assets)
 
@@ -36,12 +36,12 @@ def get_random_asset():
 def associate_asset(inner_city, i, asset):
     curr_area = inner_city[i]
     curr_area.category = asset[-1][0] # set the area category to the last one
+    direction = random.randint(0, 3) * 90 # random dir beyond four cardinal points
     for i in range(len(asset) - 1):
         category, p = asset[i]
-        direction = random.randint(0, 360)
-        logging.info(f"direction = {direction}")
-        logging.info(f"curr_area = {curr_area}")
-        curr_area = curr_area.split(p, direction, new_category=category)[1]
+        curr_area = curr_area.split(p, direction, new_category=category)
+        curr_area = curr_area[1] # we split the new category
+        direction += 90 # we change split direction so it's never parallel
 
 
 def map_inner_city(inner_city, nb_districts):

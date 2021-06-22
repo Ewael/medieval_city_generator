@@ -139,11 +139,12 @@ class Area():
         width = diameter / 2 # hence we can reach from 0 to diameter
         res = [self._polygon,]
         dw = width
-        while abs(res[0].area - house_area) > 1:  # 1 meter² error accepted
+        while abs(res[0].area - house_area) > 1 or len(res) <= 1:  # 1 meter² error accepted and successful split
             cut = LineString([pt1 + width * orth - diameter * dir, pt2 + width * orth + diameter * dir])
             res = ops.split(self._polygon, cut)
             dw /= 2
-            if len(res) == 0:
+            #if len(res) == 0:
+            if len(res) <= 1:
                 width -= dw
                 continue
             if pt_intersection.distance(res[0]) > pt_intersection.distance(res[1]):
