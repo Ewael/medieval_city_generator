@@ -38,6 +38,12 @@ class City(Area):
     def empty(self):
         self._sub_areas.clear()
 
+    def add_walls(self, inner_city):
+        inner_polys = [district.polygon for district in inner_city]
+        walls = MultiPolygon(inner_polys).buffer(0, join_style=2)
+        area_walls = Area(walls, Category.WALL)
+        self.add_subco(area_walls)
+
 
 def generate_city(city, N, radius, borders):
     min_surface, nb_small = 3, 8
@@ -61,7 +67,19 @@ def generate_city(city, N, radius, borders):
     map_outer_city(outer_city, nb_lands)
     map_inner_city(inner_city, nb_districts)
 
+    if city.has_walls:
+        city.add_walls(inner_city)
+
 
 if __name__ == "__main__":
-    city = City(5000)
+    city = City(5000, has_walls=True)
     tools.json(city, '../outfiles/city.json')
+
+
+'''
+TODO: STREETS
+on plot les rues avant les walls en blanc avec 0 buffer
+puis on ploot les walls pour overwqrite les streets exterieures
+
+TODO: changer les couleurs trop claires et eviter le rose fuchsia
+'''

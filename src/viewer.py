@@ -6,6 +6,8 @@ import matplotlib.pylab as plt
 import geopandas as gpd
 import sys
 
+from area import Category
+
 
 def to_percentage(L):
     res = L
@@ -27,7 +29,7 @@ colors_dic = {1:[255, 255, 205, 1],         # light yellow
               6:[0, 0, 204, 1],             # dark blue
               7:[102, 153, 0, 1],           # green
               8:[102, 255, 51, 1],          # light green
-              9:[204, 153, 0, 1],          # dark yellow
+              9:[204, 153, 0, 1],           # dark yellow
               10:[204, 102, 0, 1],          # orange
               11:[128, 0, 0, 1],            # dark red
               12:[204, 0, 102, 1],          # dark pink
@@ -40,6 +42,7 @@ colors_dic = {1:[255, 255, 205, 1],         # light yellow
               32:[94, 94, 94, 1],           # grey
               50:[223, 223, 223, 1],        # very light grey
               51:[55, 71, 69, 1],           # dark grey
+              52:[0, 0, 0, 1],              # black
               90:[0, 0, 0]                  # composite
               }
 
@@ -50,12 +53,22 @@ color_map = ListedColormap(colors, name='Archi')
 
 shapes = gpd.read_file(filename)
 fig, ax = plt.subplots(figsize = (10,8))
+
+# we plot the walls only
+walls = shapes[(shapes.category == Category.WALL)]
+print(walls)
+if len(walls): # if city has walls then plot it
+    walls.geometry.boundary.plot(color=None,
+            edgecolor='black', linewidth=5,
+            aspect='equal', ax=ax)
+
+# we plot city without the walls
+shapes = shapes[(shapes.category != Category.WALL)]
 shapes.plot(column='category', cmap=color_map,
             k=len(colors)+1, vmin=0, vmax=len(colors),
             #edgecolor='black',
             aspect='equal', ax=ax)
 shapes = shapes[(shapes.category > 9)]
-print(shapes)
 shapes.geometry.boundary.plot(color=None,
         edgecolor='black', linewidth=0.5,
         aspect='equal', ax=ax)

@@ -40,6 +40,7 @@ class Category(IntEnum):
     CASTLE = 32
     STREET = 50
     BRIDGE = 51
+    WALL = 52
     # union of Areas
     COMPOSITE = 90
 

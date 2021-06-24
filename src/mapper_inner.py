@@ -3,7 +3,7 @@
 import random
 import logging
 
-from area import Category
+from area import Category, Area
 
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 
@@ -46,14 +46,18 @@ def associate_asset(inner_city, i, asset):
 
 def map_inner_city(inner_city, nb_districts):
     unique_assets = get_unique_assets()
+    unique_buildings = []
     for unique_asset in unique_assets:
         inner_city[0].category = unique_asset
-        inner_city.pop(0)
+        unique_buildings.append(inner_city.pop(0))
 
     for i in range(len(inner_city)):
         asset = get_random_asset()
         logging.info(f"Disctrict {i} -> asset = {asset}")
         associate_asset(inner_city, i, asset)
+
+    for building in unique_buildings:
+        inner_city.append(building)
 
 
 """
