@@ -35,6 +35,9 @@ class City(Area):
 
         generate_city(self, N, radius, borders)
 
+    def empty(self):
+        self._sub_areas.clear()
+
 
 def generate_city(city, N, radius, borders):
     min_surface, nb_small = 3, 8
@@ -48,6 +51,9 @@ def generate_city(city, N, radius, borders):
             nb_lands > 8    and \
             inner_surface * 2 <= outer_surface:
             break
+
+        logging.info("Unrealistic city, regenerating...")
+        city.empty() # clear city components before generating a new one
 
     logging.info(f"""Generated city has {nb_districts} districts and {nb_lands} lands
         - inner surface = {inner_surface}

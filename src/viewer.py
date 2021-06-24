@@ -27,12 +27,12 @@ colors_dic = {1:[255, 255, 205, 1],         # light yellow
               6:[0, 0, 204, 1],             # dark blue
               7:[102, 153, 0, 1],           # green
               8:[102, 255, 51, 1],          # light green
+              9:[204, 153, 0, 1],          # dark yellow
               10:[204, 102, 0, 1],          # orange
               11:[128, 0, 0, 1],            # dark red
               12:[204, 0, 102, 1],          # dark pink
               13:[255, 0, 0, 1],            # red
               14:[153, 51, 255, 1],         # purple
-              15:[204, 153, 0, 1],          # dark yellow
               20:[255, 153, 255, 1],        # light pink
               21:[255, 0, 255, 1],          # pink
               22:[255, 102, 153, 1],        # faded pink
@@ -49,7 +49,16 @@ for i in colors_dic:
 color_map = ListedColormap(colors, name='Archi')
 
 shapes = gpd.read_file(filename)
+fig, ax = plt.subplots(figsize = (10,8))
 shapes.plot(column='category', cmap=color_map,
             k=len(colors)+1, vmin=0, vmax=len(colors),
-            edgecolor='black')
+            #edgecolor='black',
+            aspect='equal', ax=ax)
+shapes = shapes[(shapes.category > 9)]
+print(shapes)
+shapes.geometry.boundary.plot(color=None,
+        edgecolor='black', linewidth=0.5,
+        aspect='equal', ax=ax)
+
+#plt.grid()
 plt.show()

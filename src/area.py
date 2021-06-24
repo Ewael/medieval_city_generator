@@ -16,6 +16,7 @@ class Dir(IntEnum):
 
 
 class Category(IntEnum):
+    # outer city
     UNDEFINED = 0
     LAND = 1
     FIELD = 2
@@ -25,12 +26,13 @@ class Category(IntEnum):
     SEA = 6
     PARK = 7
     GARDEN = 8
+    FARM = 9
+    # inner city
     HOUSE = 10
     MANSION = 11
     MARKET = 12
     TOWNHALL = 13
     UNIVERSITY = 14
-    FARM = 15
     CHURCH = 20
     CATHEDRAL = 21
     MONASTRY = 22
@@ -38,7 +40,8 @@ class Category(IntEnum):
     CASTLE = 32
     STREET = 50
     BRIDGE = 51
-    COMPOSITE = 90  # a union of Areas
+    # union of Areas
+    COMPOSITE = 90
 
 
 class Area():
