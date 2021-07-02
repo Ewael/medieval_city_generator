@@ -54,9 +54,14 @@ color_map = ListedColormap(colors, name='Archi')
 shapes = gpd.read_file(filename)
 fig, ax = plt.subplots(figsize = (10,8))
 
+# plot streets before walls
+streets = shapes[(shapes.category == Category.STREET)]
+streets.geometry.boundary.plot(color=None,
+        edgecolor='white', linewidth=3,
+        aspect='equal', ax=ax)
+
 # we plot the walls only
 walls = shapes[(shapes.category == Category.WALL)]
-print(walls)
 if len(walls): # if city has walls then plot it
     walls.geometry.boundary.plot(color=None,
             edgecolor='black', linewidth=5,
@@ -64,13 +69,15 @@ if len(walls): # if city has walls then plot it
 
 # we plot city without the walls
 shapes = shapes[(shapes.category != Category.WALL)]
+shapes = shapes[(shapes.category != Category.STREET)]
 shapes.plot(column='category', cmap=color_map,
             k=len(colors)+1, vmin=0, vmax=len(colors),
             #edgecolor='black',
             aspect='equal', ax=ax)
 shapes = shapes[(shapes.category > 9)]
 shapes.geometry.boundary.plot(color=None,
-        edgecolor='black', linewidth=0.5,
+        edgecolor='black',
+        linewidth=0.0,
         aspect='equal', ax=ax)
 
 #plt.grid()

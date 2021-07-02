@@ -6,6 +6,7 @@ from scipy.spatial import Voronoi, voronoi_plot_2d
 import numpy as np
 import shapely
 import logging
+import os
 
 from area import Area, Category, generate_perimeter
 from city_splitter import split_city
@@ -44,6 +45,12 @@ class City(Area):
         area_walls = Area(walls, Category.WALL)
         self.add_subco(area_walls)
 
+    def add_streets(self, inner_city):
+        for district in inner_city:
+            poly = MultiPolygon([district.polygon]).buffer(0, join_style=2)
+            streets = Area(poly, Category.STREET)
+            self.add_subco(streets)
+
 
 def generate_city(city, N, radius, borders):
     min_surface, nb_small = 3, 8
@@ -67,11 +74,14 @@ def generate_city(city, N, radius, borders):
     map_outer_city(outer_city, nb_lands)
     map_inner_city(inner_city, nb_districts)
 
+    city.add_streets(inner_city)
+
     if city.has_walls:
         city.add_walls(inner_city)
 
 
 if __name__ == "__main__":
+    os.system('mkdir -p ../outfiles')
     city = City(5000, has_walls=True)
     tools.json(city, '../outfiles/city.json')
 
