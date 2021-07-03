@@ -21,7 +21,8 @@ logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 
 class City(Area):
     def __init__(self, population, density=10000, has_walls=False, has_castle=False, has_river=False):
-        N, radius = 8, 10 # TODO: scale it with density
+        N = population // 650
+        radius = 100
         logging.info(f"Generating borders for N = {N} and radius = {radius}")
         borders = generate_perimeter(radius)
         super().__init__(borders, Category.COMPOSITE)
@@ -59,7 +60,6 @@ def generate_city(city, N, radius, borders):
         nb_districts, nb_lands = len(inner_city), len(outer_city)
         inner_surface, outer_surface = get_surface(inner_city), get_surface(outer_city)
 
-        #TODO: scale it with density
         if nb_districts > 5 and \
             nb_lands > 8    and \
             inner_surface * 2 <= outer_surface:
@@ -82,14 +82,5 @@ def generate_city(city, N, radius, borders):
 
 if __name__ == "__main__":
     os.system('mkdir -p ../outfiles')
-    city = City(5000, has_walls=True)
+    city = City(12000, has_walls=True)
     tools.json(city, '../outfiles/city.json')
-
-
-'''
-TODO: STREETS
-on plot les rues avant les walls en blanc avec 0 buffer
-puis on ploot les walls pour overwqrite les streets exterieures
-
-TODO: changer les couleurs trop claires et eviter le rose fuchsia
-'''

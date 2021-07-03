@@ -4,6 +4,7 @@ from matplotlib.colors import ListedColormap
 
 import matplotlib.pylab as plt
 import geopandas as gpd
+import math
 import sys
 
 from area import Category
@@ -56,8 +57,12 @@ fig, ax = plt.subplots(figsize = (10,8))
 
 # plot streets before walls
 streets = shapes[(shapes.category == Category.STREET)]
+width = math.log(len(streets), 200)
+if len(streets) < 100:
+    width = 2
+print(f"[+] Loaded {len(streets)}...")
 streets.geometry.boundary.plot(color=None,
-        edgecolor='white', linewidth=3,
+        edgecolor='white', linewidth=width,
         aspect='equal', ax=ax)
 
 # we plot the walls only
@@ -70,6 +75,7 @@ if len(walls): # if city has walls then plot it
 # we plot city without the walls
 shapes = shapes[(shapes.category != Category.WALL)]
 shapes = shapes[(shapes.category != Category.STREET)]
+shapes = shapes[(shapes.category != Category.COMPOSITE)]
 shapes.plot(column='category', cmap=color_map,
             k=len(colors)+1, vmin=0, vmax=len(colors),
             #edgecolor='black',

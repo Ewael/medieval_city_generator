@@ -27,8 +27,12 @@ def get_unique_assets():
 
 def get_random_asset():
     assets = [
-            [(Category.MANSION, 0.7), (Category.GARDEN, 0.3)],
-            [(Category.HOUSE, 0.7), (Category.HOUSE, 0.5), (Category.HOUSE, 0.5)]
+            [(Category.MANSION, 0.7), (Category.MANSION, 0.5), (Category.PARK, 0.3)],
+            [(Category.HOUSE, 0.7), (Category.HOUSE, 0.5), (Category.HOUSE, 0.3)],
+            [(Category.HOUSE, 0.7), (Category.HOUSE, 0.5), (Category.HOUSE, 0.3)],
+            [(Category.HOUSE, 0.7), (Category.HOUSE, 0.5), (Category.HOUSE, 0.3)],
+            [(Category.HOUSE, 0.7), (Category.HOUSE, 0.5), (Category.HOUSE, 0.3)],
+            [(Category.MARKET, 0.6), (Category.HOUSE, 0.2)]
             ]
     return random.choice(assets)
 
@@ -53,8 +57,13 @@ def map_inner_city(inner_city, nb_districts):
 
     for i in range(len(inner_city)):
         asset = get_random_asset()
-        logging.info(f"Disctrict {i} -> asset = {asset}")
+        logging.info(f"District {i} -> asset = {asset}")
         associate_asset(inner_city, i, asset)
+        inner_city[i].category = Category.COMPOSITE # dont print parent
+        old_dis = inner_city[i]
+        while len(old_dis.sub_areas) > 1:
+            inner_city.append(old_dis.sub_areas[0])
+            old_dis = old_dis.sub_areas[1]
 
     for building in unique_buildings:
         inner_city.append(building)

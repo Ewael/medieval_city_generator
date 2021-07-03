@@ -85,6 +85,14 @@ class Area():
         self._category = new_category
 
     @property
+    def sub_areas(self):
+        return self._sub_areas
+
+    @sub_areas.setter
+    def sub_areas(self, new_category):
+        self._sub_areas = new_category
+
+    @property
     def identity(self):
         return self._id
 
@@ -114,7 +122,7 @@ class Area():
         """
         assert(percentage > 0 and percentage < 1)
         percentage = 1 - percentage
-        direction = direction - 180
+        direction = (direction - 180) % 360
         if not self._polygon.exterior.is_ccw: # should be counter clockwise
             coords = list(self._polygon.exterior.coords)
             self._polygon = Polygon(coords[::-1])
