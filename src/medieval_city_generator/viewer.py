@@ -20,7 +20,7 @@ def to_percentage(L):
 try:
     filename = sys.argv[1]
 except:
-    filename = '../outfiles/house.json'
+    filename = '../../outfiles/city.json'
 
 colors_dic = {1:[255, 255, 205, 1],         # light yellow
               2:[255, 255, 102, 1],         # yellow
