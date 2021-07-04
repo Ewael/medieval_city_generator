@@ -1,6 +1,6 @@
 # Medieval City Generator
 
-**~ Thomas Berlioz (Ewaël), Hugo Levy ~**
+**By Thomas Berlioz (Ewaël), Hugo Levy**
 
 This Python 3 project randomly generates coherent and realistic medieval cities.
 
