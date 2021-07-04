@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 
-from shapely.geometry import Polygon
-import pytest
+import os
+import sys
 
-from medieval_city_generator.area import Category, generate_perimeter, Area
-from medieval_city_generator.city_utils import get_surface
+import pytest
+from shapely.geometry import Polygon
+
+sys.path.append(os.path.realpath(os.path.dirname(__file__) + "/../src/medieval_city_generator"))
+
+from medieval_city_generator.area import Area, Category, generate_perimeter
 from medieval_city_generator.city_splitter import generate_regions, split_city
-from medieval_city_generator.mapper_inner import get_unique_assets, get_random_asset
+from medieval_city_generator.city_utils import get_surface
+from medieval_city_generator.mapper_inner import (get_random_asset,
+                                                  get_unique_assets)
 from medieval_city_generator.mapper_outer import generate_outer_category
 
 

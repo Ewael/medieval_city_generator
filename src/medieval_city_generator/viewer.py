@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
-from matplotlib.colors import ListedColormap
-
-import matplotlib.pylab as plt
-import geopandas as gpd
 import math
 import sys
 
+import geopandas as gpd
+import matplotlib.pylab as plt
 from area import Category
+from matplotlib.colors import ListedColormap
 
 
 def to_percentage(L):

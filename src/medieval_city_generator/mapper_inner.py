@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-import random
 import logging
+import random
 
-from area import Category, Area
+from area import Area, Category
 
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 

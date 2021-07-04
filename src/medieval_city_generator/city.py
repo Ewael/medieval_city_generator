@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
 
-from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
-from scipy.spatial import Voronoi, voronoi_plot_2d
-
-import numpy as np
-import shapely
 import logging
 import os
 
+import numpy as np
+import shapely
 from area import Area, Category, generate_perimeter
 from city_splitter import split_city
-from mapper_outer import map_outer_city
-from mapper_inner import map_inner_city
 from city_utils import get_surface
-
+from mapper_inner import map_inner_city
+from mapper_outer import map_outer_city
+from scipy.spatial import Voronoi, voronoi_plot_2d
+from shapely.geometry import LineString, MultiPolygon, Point, Polygon, mapping
 from tools import json
 
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')

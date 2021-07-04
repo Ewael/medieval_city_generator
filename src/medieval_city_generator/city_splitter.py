@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
-from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
-from scipy.spatial import Voronoi, voronoi_plot_2d
+import logging
+import random
 
 import numpy as np
-import random
-import logging
-
-from area import Category, Area, generate_perimeter
+from area import Area, Category, generate_perimeter
+from scipy.spatial import Voronoi, voronoi_plot_2d
+from shapely.geometry import LineString, MultiPolygon, Point, Polygon, mapping
 
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from shapely.geometry import mapping, MultiPolygon
 import fiona
+from shapely.geometry import MultiPolygon, mapping
+
 
 def write_co(c, what):
     """Recursive function to write sub components of each area."""

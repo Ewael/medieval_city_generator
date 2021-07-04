@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-from shapely.geometry import mapping, Polygon, Point, LineString, MultiPolygon
+import sys
 from enum import IntEnum
-from shapely import ops
 
 import numpy as np
-import sys
+from shapely import ops
+from shapely.geometry import LineString, MultiPolygon, Point, Polygon, mapping
 
 
 class Dir(IntEnum):
