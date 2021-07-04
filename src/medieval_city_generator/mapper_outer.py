@@ -2,7 +2,7 @@
 
 import random
 
-from area import Category
+from .area import Category
 
 
 def generate_outer_category():

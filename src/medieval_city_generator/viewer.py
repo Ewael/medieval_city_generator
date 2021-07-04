@@ -7,7 +7,7 @@ import geopandas as gpd
 import math
 import sys
 
-from area import Category
+from .area import Category
 
 
 def to_percentage(L):

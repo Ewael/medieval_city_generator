@@ -8,13 +8,13 @@ import shapely
 import logging
 import os
 
-from area import Area, Category, generate_perimeter
-from city_splitter import split_city
-from mapper_outer import map_outer_city
-from mapper_inner import map_inner_city
-from city_utils import get_surface
+from .area import Area, Category, generate_perimeter
+from .city_splitter import split_city
+from .mapper_outer import map_outer_city
+from .mapper_inner import map_inner_city
+from .city_utils import get_surface
 
-import tools
+import .tools
 
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 
