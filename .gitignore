@@ -1,4 +1,6 @@
 outfiles/
-.idea/
 __pycache__/
 *.swp
+PKG-INFO
+*.txt
+*.egg-info/

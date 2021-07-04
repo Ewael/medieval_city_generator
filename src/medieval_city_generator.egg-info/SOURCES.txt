@@ -1,7 +1,0 @@
-README.md
-setup.py
-src/medieval_city_generator.egg-info/PKG-INFO
-src/medieval_city_generator.egg-info/SOURCES.txt
-src/medieval_city_generator.egg-info/dependency_links.txt
-src/medieval_city_generator.egg-info/requires.txt
-src/medieval_city_generator.egg-info/top_level.txt
