@@ -22,29 +22,29 @@ try:
 except:
     filename = '../../outfiles/city.json'
 
-colors_dic = {1:[255, 255, 205, 1],         # light yellow
-              2:[255, 255, 102, 1],         # yellow
-              3:[0, 102, 0, 1],             # dark green
-              4:[102, 255, 255, 1],         # light blue
-              5:[0, 102, 255, 1],           # blue
-              6:[0, 0, 204, 1],             # dark blue
-              7:[102, 153, 0, 1],           # green
-              8:[102, 255, 51, 1],          # light green
-              9:[204, 153, 0, 1],           # dark yellow
-              10:[204, 102, 0, 1],          # orange
-              11:[128, 0, 0, 1],            # dark red
-              12:[204, 0, 102, 1],          # dark pink
-              13:[255, 0, 0, 1],            # red
-              14:[153, 51, 255, 1],         # purple
-              20:[255, 153, 255, 1],        # light pink
-              21:[255, 0, 255, 1],          # pink
-              22:[255, 102, 153, 1],        # faded pink
-              31:[165, 165, 165, 1],        # light grey
-              32:[94, 94, 94, 1],           # grey
-              50:[223, 223, 223, 1],        # very light grey
-              51:[55, 71, 69, 1],           # dark grey
-              52:[0, 0, 0, 1],              # black
-              90:[0, 0, 0]                  # composite
+colors_dic = {Category.LAND:[255, 255, 205, 1],         # light yellow
+              Category.FIELD:[255, 255, 102, 1],        # yellow
+              Category.FOREST:[0, 102, 0, 1],           # dark green
+              Category.RIVER:[102, 255, 255, 1],        # light blue
+              Category.LAKE:[0, 102, 255, 1],           # blue
+              Category.SEA:[0, 0, 204, 1],              # dark blue
+              Category.PARK:[102, 153, 0, 1],           # green
+              Category.GARDEN:[102, 255, 51, 1],        # light green
+              Category.FARM:[204, 153, 0, 1],           # dark yellow
+              Category.HOUSE:[204, 102, 0, 1],          # orange
+              Category.MANSION:[128, 0, 0, 1],          # dark red
+              Category.MARKET:[204, 0, 102, 1],         # dark pink
+              Category.TOWNHALL:[255, 0, 0, 1],         # red
+              Category.UNIVERSITY:[153, 51, 255, 1],    # purple
+              Category.CHURCH:[255, 153, 255, 1],        # light pink
+              Category.CATHEDRAL:[255, 0, 255, 1],      # pink
+              Category.MONASTRY:[255, 102, 153, 1],     # faded pink
+              Category.FORT:[165, 165, 165, 1],         # light grey
+              Category.CASTLE:[94, 94, 94, 1],          # grey
+              Category.STREET:[223, 223, 223, 1],       # very light grey
+              Category.BRIDGE:[55, 71, 69, 1],          # dark grey
+              Category.WALL:[0, 0, 0, 1],               # black
+              Category.COMPOSITE:[0, 0, 0]              # composite
               }
 
 # associate colors with categories
@@ -62,7 +62,9 @@ streets = shapes[(shapes.category == Category.STREET)]
 width = math.log(len(streets), 200)
 if len(streets) < 100:
     width = 2
-print(f"[+] Loaded {len(streets)}...")
+if len(streets) > 900:
+    width = 0.4
+print(f"[+] Loaded {len(streets)} streets")
 streets.geometry.boundary.plot(color=None,
         edgecolor='white', linewidth=width,
         aspect='equal', ax=ax)
@@ -90,4 +92,5 @@ shapes.geometry.boundary.plot(color=None,
         linewidth=0.0,
         aspect='equal', ax=ax)
 
+print(f"[+] Rendering city...")
 plt.show()

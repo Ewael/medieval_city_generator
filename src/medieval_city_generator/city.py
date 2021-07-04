@@ -6,6 +6,7 @@ import os
 import numpy as np
 import shapely
 from area import Area, Category, generate_perimeter
+from arg_parser import parse
 from city_splitter import split_city
 from city_utils import get_surface
 from mapper_inner import map_inner_city
@@ -85,6 +86,12 @@ def generate_city(city, N, radius, borders):
 
 
 if __name__ == "__main__":
-    os.system('mkdir -p ../../outfiles')
-    city = City(12000, has_walls=True, has_castle=True)
-    json(city, '../../outfiles/city.json')
+    args = parse()
+    if not args.outfile:
+        args.outfile = '../../outfiles/city.json'
+    if not args.population:
+        args.population = 12000
+    if not args.density:
+        args.density = 10000
+    city = City(args.population, args.density, args.walls, args.castle, args.river)
+    json(city, args.outfile)
