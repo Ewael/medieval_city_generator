@@ -6,6 +6,7 @@ from area import Category
 
 
 def generate_outer_category():
+    """Return a random categoy following coherent probabilities for outer city areas."""
     n = random.random()
     if n < 0.2:
         return Category.LAND
@@ -20,17 +21,6 @@ def generate_outer_category():
 
 
 def map_outer_city(outer_city, nb_lands):
+    """Associate coherent categories to outer city areas."""
     for outer_area in outer_city:
         outer_area.category = generate_outer_category()
-
-
-"""
-Outer:
-    LAND = 1
-    FIELD = 2
-    FOREST = 3
-    RIVER = 4
-    LAKE = 5
-    SEA = 6
-    FARM = 15
-"""

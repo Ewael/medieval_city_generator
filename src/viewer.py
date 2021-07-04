@@ -11,6 +11,7 @@ from area import Category
 
 
 def to_percentage(L):
+    """Return RGB values in percentage."""
     res = L
     res[0] /= 255
     res[1] /= 255
@@ -47,11 +48,13 @@ colors_dic = {1:[255, 255, 205, 1],         # light yellow
               90:[0, 0, 0]                  # composite
               }
 
+# associate colors with categories
 colors = [[1,0,0,1] for _ in range(max(colors_dic.keys())+1)]
 for i in colors_dic:
     colors[i] = to_percentage(colors_dic[i])
 color_map = ListedColormap(colors, name='Archi')
 
+# read file
 shapes = gpd.read_file(filename)
 fig, ax = plt.subplots(figsize = (10,8))
 
@@ -72,7 +75,7 @@ if len(walls): # if city has walls then plot it
             edgecolor='black', linewidth=5,
             aspect='equal', ax=ax)
 
-# we plot city without the walls
+# we plot inner city without the walls
 shapes = shapes[(shapes.category != Category.WALL)]
 shapes = shapes[(shapes.category != Category.STREET)]
 shapes = shapes[(shapes.category != Category.COMPOSITE)]
@@ -80,11 +83,12 @@ shapes.plot(column='category', cmap=color_map,
             k=len(colors)+1, vmin=0, vmax=len(colors),
             #edgecolor='black',
             aspect='equal', ax=ax)
+
+# plot outer city
 shapes = shapes[(shapes.category > 9)]
 shapes.geometry.boundary.plot(color=None,
         edgecolor='black',
         linewidth=0.0,
         aspect='equal', ax=ax)
 
-#plt.grid()
 plt.show()

@@ -13,10 +13,9 @@ logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 
 
 def generate_regions(N, radius, limit, min_surface, nb_small):
-    """
-    Generate random regions, loop while one region has nb_small areas < min_surface.
-    """
+    """Generate random regions, loop while one region has nb_small areas < min_surface."""
     while True:
+        # generation points for voronoi split
         points = np.array([[x,y] for x in np.linspace(-1,1,N) for y in np.linspace(-1,1,N)])
         points *= radius
         points += np.random.random((len(points), 2)) * (radius / 3)
@@ -27,7 +26,7 @@ def generate_regions(N, radius, limit, min_surface, nb_small):
         regions = [Polygon([vor.vertices[i] for i in r]) for r in regions]
         regions = [r for r in regions if limit.contains(r)]
 
-        # check surfaces
+        # check surfaces coherence
         n = 0
         for r in regions:
             if r.area < min_surface:
@@ -40,21 +39,21 @@ def generate_regions(N, radius, limit, min_surface, nb_small):
 
 
 def split_city(city, N, radius, limit, min_surface, nb_small):
-    """
-    Split inner and outer regions of the city.
-    """
+    """Split inner and outer regions of the city."""
     regions = generate_regions(N, radius, limit, min_surface, nb_small)
 
+    # generate walls
     walls = generate_perimeter(radius / 1.9)
     categories = [Category.HOUSE if walls.contains(r) else Category.FARM for r in regions]
 
+    # temporarly associate HOUSE to inner city and FARM to outer city
     inner_city, outer_city = [], []
     for r in regions:
         area = Area(r, Category.HOUSE if walls.contains(r) else Category.FARM)
         city.add_subco(area)
-        if area.category == Category.HOUSE:
+        if area.category == Category.HOUSE: # inner
             inner_city.append(area)
-        else: # FARM
+        else: # outer
             outer_city.append(area)
 
     return inner_city, outer_city

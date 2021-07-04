@@ -4,6 +4,7 @@ from shapely.geometry import mapping, MultiPolygon
 import fiona
 
 def write_co(c, what):
+    """Recursive function to write sub components of each area."""
     if what.components() == [what]: # if only subco is the co itself
         return
     for co in what.components(): # else rec call on each subco

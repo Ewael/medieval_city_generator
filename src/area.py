@@ -173,23 +173,24 @@ class Area():
         return area0, area1
 
     def add_subco(self, subco):
+        """Add sub area to the components."""
         if self._sub_areas == [self]:
             self._sub_areas = [subco]
         else:
             self._sub_areas.append(subco)
 
     def components(self):
+        """Return components."""
         if len(self._sub_areas) > 0:
             return self._sub_areas
         else:
             return [self,]
 
     def get_area(self):
+        """Return surface of the polygon of the Area."""
         return self.polygon.area
 
 
 def generate_perimeter(radius, dimensions = (8, 2)):
-    """
-    Return a Polygon whose dims respect the given radius.
-    """
+    """Return a Polygon whose dims respect the given radius."""
     return Polygon((2 * np.random.random(dimensions) - 1) * radius).convex_hull.buffer(radius / 2)
