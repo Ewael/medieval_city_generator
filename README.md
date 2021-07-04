@@ -68,7 +68,7 @@ The **generator**:
 - If necessary, we add walls around the whole *inner city*.
 
 The **viewer**:
-- We associate each category of area to a specific color (see above).
+- We associate each category of area to a specific color (see palette).
 - We plot the streets first, then walls, and finally the whole city.
 
 ## Palette
