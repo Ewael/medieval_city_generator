@@ -3,7 +3,7 @@
 import random
 import logging
 
-from .area import Category, Area
+from area import Category, Area
 
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 

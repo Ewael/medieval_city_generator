@@ -7,7 +7,7 @@ import numpy as np
 import random
 import logging
 
-from .area import Category, Area, generate_perimeter
+from area import Category, Area, generate_perimeter
 
 logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 
