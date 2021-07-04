@@ -88,6 +88,7 @@ def generate_city(city, N, radius, borders):
 if __name__ == "__main__":
     args = parse()
     if not args.outfile:
+        os.system('mkdir -p ../../outfiles')
         args.outfile = '../../outfiles/city.json'
     if not args.population:
         args.population = 12000
